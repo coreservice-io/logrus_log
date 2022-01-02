@@ -155,6 +155,8 @@ func (logger *LocalLog) PrintLastN_AllLogs(lastN int) {
 
 func (logger *LocalLog) printLastNLogs(type_ string, lastN int) {
 
+	color.White("================== start ==================")
+
 	var alllogfiles []string
 	var err error
 	var folder string
@@ -167,11 +169,12 @@ func (logger *LocalLog) printLastNLogs(type_ string, lastN int) {
 
 	if err != nil {
 		color.Red(err.Error())
-		color.White("exit")
+		color.White("================== end   ==================")
 		return
 	}
 	if len(alllogfiles) == 0 {
-		color.White("no logfile")
+		color.Red("no logfile")
+		color.White("================== end   ==================")
 		return
 	}
 
@@ -188,7 +191,7 @@ func (logger *LocalLog) printLastNLogs(type_ string, lastN int) {
 			if err != nil {
 				color.Red(err.Error())
 				color.Red("log view not supported , please directly check logfile :" + fname)
-				color.White("exit")
+				color.White("================== end   ==================")
 				return
 			}
 			go func() {
@@ -202,7 +205,7 @@ func (logger *LocalLog) printLastNLogs(type_ string, lastN int) {
 		stdout, err := cmd.Output()
 		if err != nil {
 			color.Red(err.Error())
-			color.White("exit")
+			color.White("================== end   ==================")
 			return
 		}
 		lines := splitLines(string(stdout))
@@ -226,13 +229,13 @@ func (logger *LocalLog) printLastNLogs(type_ string, lastN int) {
 
 			Counter++
 			if Counter >= lastN {
-				color.White("END")
+				color.White("================== end   ==================")
 				return
 			}
 		}
 
 	}
-	color.White("EXIT")
+	color.White("================== end   ==================")
 }
 
 func splitLines(s string) []string {
