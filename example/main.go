@@ -1,14 +1,13 @@
-package example
+package main
 
 import (
 	"fmt"
-	"testing"
 
 	"github.com/universe-30/ULog_logrus"
 	"github.com/universe-30/UUtils/path_util"
 )
 
-func Test_main(t *testing.T) {
+func main() {
 	//default is info level
 	ulog, err := ULog_logrus.New(path_util.GetAbsPath("logs"), 2, 20, 30)
 	if err != nil {
