@@ -1,4 +1,4 @@
-module github.com/universe-30/ULog_logrus
+module github.com/universe-30/logrus
 
 go 1.17
 

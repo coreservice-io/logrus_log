@@ -4,19 +4,19 @@ import (
 	"fmt"
 
 	"github.com/universe-30/ULog"
-	"github.com/universe-30/ULog_logrus"
+	"github.com/universe-30/logrus"
 )
 
 func main() {
 	//default is info level
-	ulog_logrus, err := ULog_logrus.New("./logs", 2, 20, 30)
+	log_logrus, err := logrus.New("./logs", 2, 20, 30)
 	if err != nil {
 		panic(err.Error())
 	}
 
 	//ulog_logrus implements the ULog interface
 	var ulog ULog.Logger
-	ulog = ulog_logrus
+	ulog = log_logrus
 
 	ulog.SetLevel(ULog.TraceLevel)
 	ulog.Traceln("trace log")
@@ -30,9 +30,9 @@ func main() {
 	//ulog_logrus extended functions
 	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//all logs include all types :debug ,info ,warning ,error,panic ,fatal
-	ulog_logrus.PrintLastN_AllLogs(100)
+	log_logrus.PrintLastN_AllLogs(100)
 	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//err logs include all types :,error,panic ,fatal
-	ulog_logrus.PrintLastN_ErrLogs(100)
+	log_logrus.PrintLastN_ErrLogs(100)
 	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 }
