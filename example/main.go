@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/universe-30/ULog"
 	"github.com/universe-30/ULog_logrus"
 	"github.com/universe-30/UUtils/path_util"
 )
@@ -24,7 +25,7 @@ func main() {
 		"f2": "2",
 	}).Warnf("Total  yy Warn Fileds : %d", 2)
 
-	ulog.SetLevel(ULog_logrus.DebugLevel)
+	ulog.SetLevel(ULog.DebugLevel)
 
 	ulog.WithFields(ULog_logrus.Fields{
 		"f1": "1",
@@ -36,7 +37,7 @@ func main() {
 		"f2": "2",
 	}).Debugf("Total Debug Fileds : %d", 2)
 
-	ulog.SetLevel(ULog_logrus.TraceLevel)
+	ulog.SetLevel(ULog.TraceLevel)
 
 	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//all logs include all types :debug ,info ,warning ,error,panic ,fatal
