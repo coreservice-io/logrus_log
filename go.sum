@@ -19,8 +19,6 @@ github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/universe-30/ULog v0.1.9 h1:M+AtK8echJvPZ9EVxMOq6LByX+UfRCn+cE0zaLrjssY=
 github.com/universe-30/ULog v0.1.9/go.mod h1:crCwYCpgVO3bGi0wEx0CKsb9RwsQ2zmnLh1Yov3VKyM=
-github.com/universe-30/UUtils v0.1.0 h1:VcXUdCmqP0gxQZXqLthCUhA8JB2kyC2whg6wFRUZLiY=
-github.com/universe-30/UUtils v0.1.0/go.mod h1:TMnKGbg4zgONvfQNRm+XA1+gC/KP3Y9om6oNF4445ws=
 golang.org/x/sys v0.0.0-20191026070338-33540a1f6037/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200116001909-b77594299b42/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
