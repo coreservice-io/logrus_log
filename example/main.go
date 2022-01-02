@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/universe-30/ULog"
 	"github.com/universe-30/logrus"
 )
@@ -28,11 +26,8 @@ func main() {
 	//ulog.Panicln("panic log")
 
 	//ulog_logrus extended functions
-	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//all logs include all types :debug ,info ,warning ,error,panic ,fatal
 	log_logrus.PrintLastN_AllLogs(100)
-	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//err logs include all types :,error,panic ,fatal
 	log_logrus.PrintLastN_ErrLogs(100)
-	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 }
