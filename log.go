@@ -2,7 +2,6 @@ package ULog_logrus
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -18,19 +17,32 @@ import (
 	"github.com/universe-30/ULog"
 )
 
-//const LEVEL_PANIC ULog.LogLevel = "PANI"
-//const LEVEL_FATAL ULog.LogLevel = "FATA"
-//const LEVEL_ERROR ULog.LogLevel = "ERRO"
-//const LEVEL_WARN ULog.LogLevel = "WARN"
-//const LEVEL_INFO ULog.LogLevel = "INFO"
-//const LEVEL_DEBUG ULog.LogLevel = "DEBU"
-//const LEVEL_TRACE ULog.LogLevel = "TRAC"
-
 var logsAllAbsFolder string
 var logsErrorAbsFolder string
 
 type Fields = logrus.Fields
 type LogLevel = ULog.LogLevel
+
+const (
+	// PanicLevel level, highest level of severity. Logs and then calls panic with the
+	// message passed to Debug, Info, ...
+	PanicLevel LogLevel = iota
+	// FatalLevel level. Logs and then calls `logger.Exit(1)`. It will exit even if the
+	// logging level is set to Panic.
+	FatalLevel
+	// ErrorLevel level. Logs. Used for errors that should definitely be noted.
+	// Commonly used for hooks to send errors to an error tracking service.
+	ErrorLevel
+	// WarnLevel level. Non-critical entries that deserve eyes.
+	WarnLevel
+	// InfoLevel level. General operational entries about what's going on inside the
+	// application.
+	InfoLevel
+	// DebugLevel level. Usually only enabled when debugging. Very verbose logging.
+	DebugLevel
+	// TraceLevel level. Designates finer-grained informational events than the Debug.
+	TraceLevel
+)
 
 var ShowColor bool
 
@@ -51,7 +63,7 @@ type LocalLog struct {
 	MaxAge           int
 }
 
-func (logger *LocalLog) ResetLevel(loglevel LogLevel) error {
+func (logger *LocalLog) SetLevel(loglevel LogLevel) {
 
 	var LLevel logrus.Level
 
@@ -71,13 +83,13 @@ func (logger *LocalLog) ResetLevel(loglevel LogLevel) error {
 	case ULog.TraceLevel:
 		LLevel = logrus.TraceLevel
 	default:
-		return errors.New("no such level:" + string(loglevel))
+		LLevel = logrus.InfoLevel
 	}
 
 	alllogfile := filepath.Join(logger.ALL_LogfolderABS, "all_log.txt")
 	errlogfile := filepath.Join(logger.ERR_LogfolderABS, "err_log.txt")
 
-	rotateFileHook_ALL, err_all := newRotateFileHook(rotateFileConfig{
+	rotateFileHook_ALL := newRotateFileHook(rotateFileConfig{
 		Filename:   alllogfile,
 		MaxSize:    logger.MaxSize, // megabytes
 		MaxBackups: logger.MaxBackups,
@@ -89,11 +101,8 @@ func (logger *LocalLog) ResetLevel(loglevel LogLevel) error {
 			TimestampFormat: "2006-01-02 15:04:05",
 		}},
 	})
-	if err_all != nil {
-		return err_all
-	}
 
-	rotateFileHook_ERR, err_err := newRotateFileHook(rotateFileConfig{
+	rotateFileHook_ERR := newRotateFileHook(rotateFileConfig{
 		Filename:   errlogfile,
 		MaxSize:    logger.MaxSize, // megabytes
 		MaxBackups: logger.MaxBackups,
@@ -106,10 +115,6 @@ func (logger *LocalLog) ResetLevel(loglevel LogLevel) error {
 		}},
 	})
 
-	if err_err != nil {
-		return err_err
-	}
-
 	logger.SetFormatter(UTCFormatter{&nested.Formatter{
 		HideKeys:        false,
 		TimestampFormat: "2006-01-02 15:04:05",
@@ -117,12 +122,10 @@ func (logger *LocalLog) ResetLevel(loglevel LogLevel) error {
 	}})
 
 	/////set hooks
-	logger.SetLevel(LLevel)
+	logger.Logger.SetLevel(logrus.Level(loglevel))
 	logger.ReplaceHooks(make(logrus.LevelHooks))
 	logger.AddHook(rotateFileHook_ALL)
 	logger.AddHook(rotateFileHook_ERR)
-
-	return nil
 }
 
 // Default is info level
@@ -145,10 +148,7 @@ func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAg
 	//default info level//
 	LocalLogPointer := &LocalLog{logger, logsAllAbsFolder, logsErrorAbsFolder,
 		fileMaxSizeMBytes, MaxBackupsFiles, MaxAgeDays}
-	err = LocalLogPointer.ResetLevel(ULog.InfoLevel)
-	if err != nil {
-		return nil, err
-	}
+	LocalLogPointer.SetLevel(ULog.InfoLevel)
 	return LocalLogPointer, nil
 }
 
@@ -229,17 +229,17 @@ func (logger *LocalLog) printLastNLogs(type_ string, lastN int) {
 		lines := splitLines(string(stdout))
 		for i := 0; i < len(lines); i++ {
 
-			if strings.Contains(lines[i], "["+string(ULog.DebugTagStr)+"]") {
+			if strings.Contains(lines[i], string(ULog.DebugTagStr)) {
 				color.White(lines[i])
-			} else if strings.Contains(lines[i], "["+string(ULog.TraceTagStr)+"]") {
+			} else if strings.Contains(lines[i], string(ULog.TraceTagStr)) {
 				color.Cyan(lines[i])
-			} else if strings.Contains(lines[i], "["+string(ULog.InfoTagStr)+"]") {
+			} else if strings.Contains(lines[i], string(ULog.InfoTagStr)) {
 				color.Green(lines[i])
-			} else if strings.Contains(lines[i], "["+string(ULog.WarnTagStr)+"]") {
+			} else if strings.Contains(lines[i], string(ULog.WarnTagStr)) {
 				color.Yellow(lines[i])
-			} else if strings.Contains(lines[i], "["+string(ULog.FatalTagStr)+"]") ||
-				strings.Contains(lines[i], "["+string(ULog.ErrorTagStr)+"]") ||
-				strings.Contains(lines[i], "["+string(ULog.PanicTagStr)+"]") {
+			} else if strings.Contains(lines[i], string(ULog.FatalTagStr)) ||
+				strings.Contains(lines[i], string(ULog.ErrorTagStr)) ||
+				strings.Contains(lines[i], string(ULog.PanicTagStr)) {
 				color.Red(lines[i])
 			} else {
 				color.White(lines[i])

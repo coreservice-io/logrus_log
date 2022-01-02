@@ -21,7 +21,7 @@ type rotateFileHook struct {
 	logWriter io.Writer
 }
 
-func newRotateFileHook(config rotateFileConfig) (logrus.Hook, error) {
+func newRotateFileHook(config rotateFileConfig) logrus.Hook {
 
 	hook := rotateFileHook{
 		Config: config,
@@ -33,7 +33,7 @@ func newRotateFileHook(config rotateFileConfig) (logrus.Hook, error) {
 		MaxAge:     config.MaxAge,
 	}
 
-	return &hook, nil
+	return &hook
 }
 
 func (hook *rotateFileHook) Levels() []logrus.Level {

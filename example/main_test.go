@@ -1,25 +1,14 @@
-# ULog_logrus
-
-##### support both linux mac andwindows
-
-### install
-```
-go get "github.com/universe-30/ULog_logrus"
-```
-
-### example
-
-```go
-package main
+package example
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/universe-30/ULog_logrus"
 	"github.com/universe-30/UUtils/path_util"
 )
 
-func main() {
+func Test_main(t *testing.T) {
 	//default is info level
 	ulog, err := ULog_logrus.New(path_util.GetAbsPath("logs"), 2, 20, 30)
 	if err != nil {
@@ -36,7 +25,7 @@ func main() {
 		"f2": "2",
 	}).Warnf("Total  yy Warn Fileds : %d", 2)
 
-	ulog.ResetLevel(ULog_logrus.DebugLevel)
+	ulog.SetLevel(ULog_logrus.DebugLevel)
 
 	ulog.WithFields(ULog_logrus.Fields{
 		"f1": "1",
@@ -48,7 +37,7 @@ func main() {
 		"f2": "2",
 	}).Debugf("Total Debug Fileds : %d", 2)
 
-	ulog.ResetLevel(ULog_logrus.TraceLevel)
+	ulog.SetLevel(ULog_logrus.TraceLevel)
 
 	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//all logs include all types :debug ,info ,warning ,error,panic ,fatal
@@ -63,5 +52,3 @@ func main() {
 
 	ulog.Traceln("this is warn ln")
 }
-
-```
