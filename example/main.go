@@ -7,7 +7,7 @@ import (
 
 func main() {
 	//default is info level
-	log_logrus, err := Logrus.New("./logs", 2, 20, 30)
+	log_logrus, err := Logrus.New("./logs", 1, 20, 30)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -17,6 +17,7 @@ func main() {
 	ulog = log_logrus
 
 	ulog.SetLevel(ULog.TraceLevel)
+
 	ulog.Traceln("trace log")
 	ulog.Debugln("debug log")
 	ulog.Infoln("info log")

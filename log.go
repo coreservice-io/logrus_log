@@ -2,13 +2,10 @@ package Logrus
 
 import (
 	"bufio"
-	"fmt"
+	"errors"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
-	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
@@ -87,7 +84,6 @@ func (logger *LocalLog) SetLevel(loglevel LogLevel) {
 	logger.SetFormatter(UTCFormatter{&nested.Formatter{
 		HideKeys:        false,
 		TimestampFormat: "2006-01-02 15:04:05",
-		//NoColors:        !ShowColor,
 	}})
 
 	/////set hooks
@@ -121,7 +117,7 @@ func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAg
 	return LocalLogPointer, nil
 }
 
-func (logger *LocalLog) GetLogFilesList(log_folder string) ([]string, error) {
+func (logger *LocalLog) getLogFilesList(log_folder string) ([]string, error) {
 
 	var result []string
 	files, err := ioutil.ReadDir(log_folder)
@@ -129,103 +125,149 @@ func (logger *LocalLog) GetLogFilesList(log_folder string) ([]string, error) {
 		return nil, err
 	}
 
-	for _, f := range files {
-		result = append(result, f.Name())
+	if len(files) == 0 {
+		return result, nil
 	}
+
+	for i := len(files) - 1; i >= 0; i-- {
+		result = append(result, files[i].Name())
+	}
+
 	return result, nil
 }
 
-func (logger *LocalLog) PrintLastN_ErrLogs(lastN int) {
-	logger.printLastNLogs("error", lastN)
-}
-
-func (logger *LocalLog) PrintLastN_AllLogs(lastN int) {
-	logger.printLastNLogs("all", lastN)
-}
-
-func (logger *LocalLog) printLastNLogs(type_ string, lastN int) {
-
-	color.White("================== start ==================")
-
+func (logger *LocalLog) GetLastN(lineCount int, levels []LogLevel) ([]string, error) {
 	var alllogfiles []string
 	var err error
 	var folder string
-	if type_ == "error" {
-		folder = logger.ERR_LogfolderABS
-	} else {
-		folder = logger.ALL_LogfolderABS
-	}
-	alllogfiles, err = logger.GetLogFilesList(folder)
-
+	folder = logger.ALL_LogfolderABS
+	alllogfiles, err = logger.getLogFilesList(folder)
 	if err != nil {
-		color.Red(err.Error())
-		color.White("================== end   ==================")
-		return
+		return nil, err
 	}
 	if len(alllogfiles) == 0 {
-		color.Red("no logfile")
-		color.White("================== end   ==================")
-		return
+		return nil, errors.New("no logfile")
 	}
 
 	Counter := 0
+	levelMap := map[LogLevel]struct{}{}
+	for i := range levels {
+		levelMap[levels[i]] = struct{}{}
+	}
+
+	resultLog := []string{}
 
 	for i := 0; i < len(alllogfiles); i++ {
 		fname := filepath.Join(folder, alllogfiles[i])
 
-		var cmd *exec.Cmd
-
-		if runtime.GOOS == "windows" {
-			cmd = exec.Command("powershell", "-nologo", "-noprofile")
-			stdin, err := cmd.StdinPipe()
-			if err != nil {
-				color.Red(err.Error())
-				color.Red("log view not supported , please directly check logfile :" + fname)
-				color.White("================== end   ==================")
-				return
-			}
-			go func() {
-				defer stdin.Close()
-				fmt.Fprintln(stdin, "Get-Content "+fname+" | Select-Object -last "+strconv.Itoa(lastN))
-			}()
-		} else {
-			cmd = exec.Command("tail", "-n", strconv.Itoa(lastN), fname)
-		}
-
-		stdout, err := cmd.Output()
+		fileContent, err := ioutil.ReadFile(fname)
 		if err != nil {
-			color.Red(err.Error())
-			color.White("================== end   ==================")
-			return
+			return resultLog, err
 		}
-		lines := splitLines(string(stdout))
-		for i := 0; i < len(lines); i++ {
 
-			if strings.Contains(lines[i], string(ULog.DebugTagStr)) {
-				color.White(lines[i])
-			} else if strings.Contains(lines[i], string(ULog.TraceTagStr)) {
-				color.Cyan(lines[i])
-			} else if strings.Contains(lines[i], string(ULog.InfoTagStr)) {
-				color.Green(lines[i])
-			} else if strings.Contains(lines[i], string(ULog.WarnTagStr)) {
-				color.Yellow(lines[i])
-			} else if strings.Contains(lines[i], string(ULog.FatalTagStr)) ||
-				strings.Contains(lines[i], string(ULog.ErrorTagStr)) ||
-				strings.Contains(lines[i], string(ULog.PanicTagStr)) {
-				color.Red(lines[i])
-			} else {
-				color.White(lines[i])
+		lines := splitLines(string(fileContent))
+
+		for i := len(lines) - 1; i >= 0; i-- {
+
+			if lines[i] == "" {
+				continue
 			}
 
+			if strings.Contains(lines[i], string(ULog.DebugTagStr)) && isContain(levelMap, ULog.DebugLevel) {
+				resultLog = append(resultLog, lines[i])
+				Counter++
+			} else if strings.Contains(lines[i], string(ULog.TraceTagStr)) && isContain(levelMap, ULog.TraceLevel) {
+				resultLog = append(resultLog, lines[i])
+				Counter++
+			} else if strings.Contains(lines[i], string(ULog.InfoTagStr)) && isContain(levelMap, ULog.InfoLevel) {
+				resultLog = append(resultLog, lines[i])
+				Counter++
+			} else if strings.Contains(lines[i], string(ULog.WarnTagStr)) && isContain(levelMap, ULog.WarnLevel) {
+				resultLog = append(resultLog, lines[i])
+				Counter++
+			} else if strings.Contains(lines[i], string(ULog.FatalTagStr)) && isContain(levelMap, ULog.FatalLevel) {
+				resultLog = append(resultLog, lines[i])
+				Counter++
+			} else if strings.Contains(lines[i], string(ULog.ErrorTagStr)) && isContain(levelMap, ULog.ErrorLevel) {
+				resultLog = append(resultLog, lines[i])
+				Counter++
+			} else if strings.Contains(lines[i], string(ULog.PanicTagStr)) && isContain(levelMap, ULog.PanicLevel) {
+				resultLog = append(resultLog, lines[i])
+				Counter++
+			}
+
+			if Counter >= lineCount {
+				reversArr(resultLog)
+				return resultLog, nil
+			}
+		}
+	}
+	reversArr(resultLog)
+	return resultLog, nil
+}
+
+func (logger *LocalLog) PrintLastN(lineCount int, levels []LogLevel) {
+	color.White("================== start ==================")
+
+	lines, err := logger.GetLastN(lineCount, levels)
+	if err != nil {
+		color.Red(err.Error())
+		color.White("================== end ==================")
+		return
+	}
+
+	if err != nil {
+		color.Red(err.Error())
+		color.White("================== end ==================")
+		return
+	}
+
+	Counter := 0
+	levelMap := map[LogLevel]struct{}{}
+	for i := range levels {
+		levelMap[levels[i]] = struct{}{}
+	}
+
+	for i := 0; i < len(lines); i++ {
+
+		if strings.Contains(lines[i], string(ULog.DebugTagStr)) && isContain(levelMap, ULog.DebugLevel) {
+			color.White(lines[i])
 			Counter++
-			if Counter >= lastN {
-				color.White("================== end   ==================")
-				return
-			}
+		} else if strings.Contains(lines[i], string(ULog.TraceTagStr)) && isContain(levelMap, ULog.TraceLevel) {
+			color.Cyan(lines[i])
+			Counter++
+		} else if strings.Contains(lines[i], string(ULog.InfoTagStr)) && isContain(levelMap, ULog.InfoLevel) {
+			color.Green(lines[i])
+			Counter++
+		} else if strings.Contains(lines[i], string(ULog.WarnTagStr)) && isContain(levelMap, ULog.WarnLevel) {
+			color.Yellow(lines[i])
+			Counter++
+		} else if strings.Contains(lines[i], string(ULog.FatalTagStr)) && isContain(levelMap, ULog.FatalLevel) {
+			color.Red(lines[i])
+			Counter++
+		} else if strings.Contains(lines[i], string(ULog.ErrorTagStr)) && isContain(levelMap, ULog.ErrorLevel) {
+			color.Red(lines[i])
+			Counter++
+		} else if strings.Contains(lines[i], string(ULog.PanicTagStr)) && isContain(levelMap, ULog.PanicLevel) {
+			color.Red(lines[i])
+			Counter++
+		}
+
+		if Counter >= lineCount {
+			color.White("================== end ==================")
+			return
 		}
 
 	}
-	color.White("================== end   ==================")
+	color.White("================== end ==================")
+}
+
+func (logger *LocalLog) PrintLastN_ErrLogs(lastN int) {
+	logger.PrintLastN(lastN, []ULog.LogLevel{ULog.ErrorLevel, ULog.PanicLevel, ULog.FatalLevel})
+}
+
+func (logger *LocalLog) PrintLastN_AllLogs(lastN int) {
+	logger.PrintLastN(lastN, []ULog.LogLevel{ULog.ErrorLevel, ULog.PanicLevel, ULog.FatalLevel, ULog.TraceLevel, ULog.DebugLevel, ULog.InfoLevel, ULog.WarnLevel})
 }
 
 func splitLines(s string) []string {
@@ -235,4 +277,18 @@ func splitLines(s string) []string {
 		lines = append(lines, sc.Text())
 	}
 	return lines
+}
+
+func isContain(m map[ULog.LogLevel]struct{}, l ULog.LogLevel) bool {
+	_, ok := m[l]
+	return ok
+}
+
+func reversArr(arr []string) {
+	length := len(arr)
+	for i := 0; i < length/2; i++ {
+		temp := arr[length-1-i]
+		arr[length-1-i] = arr[i]
+		arr[i] = temp
+	}
 }
