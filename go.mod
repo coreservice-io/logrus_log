@@ -3,7 +3,6 @@ module github.com/universe-30/Logrus
 go 1.17
 
 require (
-	github.com/antonfisher/nested-logrus-formatter v1.3.1
 	github.com/fatih/color v1.13.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/universe-30/ULog v0.1.9

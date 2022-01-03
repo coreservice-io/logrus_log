@@ -11,9 +11,9 @@ import (
 	"strconv"
 	"strings"
 
-	nested "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"
+	"github.com/universe-30/Logrus/nested"
 	"github.com/universe-30/ULog"
 )
 
@@ -22,16 +22,6 @@ var logsErrorAbsFolder string
 
 type Fields = logrus.Fields
 type LogLevel = ULog.LogLevel
-
-var ShowColor bool
-
-func init() {
-	if runtime.GOOS == "windows" {
-		ShowColor = false
-	} else {
-		ShowColor = true
-	}
-}
 
 type LocalLog struct {
 	*logrus.Logger
@@ -97,7 +87,7 @@ func (logger *LocalLog) SetLevel(loglevel LogLevel) {
 	logger.SetFormatter(UTCFormatter{&nested.Formatter{
 		HideKeys:        false,
 		TimestampFormat: "2006-01-02 15:04:05",
-		NoColors:        !ShowColor,
+		//NoColors:        !ShowColor,
 	}})
 
 	/////set hooks
