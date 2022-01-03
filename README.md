@@ -1,4 +1,4 @@
-# logrus
+# Logrus
 
 ##### support both linux mac andwindows
 
@@ -13,15 +13,13 @@ go get "github.com/universe-30/logrus"
 package main
 
 import (
-	"fmt"
-
+	"github.com/universe-30/Logrus"
 	"github.com/universe-30/ULog"
-	"github.com/universe-30/logrus"
 )
 
 func main() {
 	//default is info level
-	log_logrus, err := logrus.New("./logs", 2, 20, 30)
+	log_logrus, err := Logrus.New("./logs", 2, 20, 30)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -40,12 +38,9 @@ func main() {
 	//ulog.Panicln("panic log")
 
 	//ulog_logrus extended functions
-	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//all logs include all types :debug ,info ,warning ,error,panic ,fatal
 	log_logrus.PrintLastN_AllLogs(100)
-	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 	//err logs include all types :,error,panic ,fatal
 	log_logrus.PrintLastN_ErrLogs(100)
-	fmt.Println("////////////////////////////////////////////////////////////////////////////////")
 }
 ```

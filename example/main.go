@@ -1,13 +1,13 @@
 package main
 
 import (
+	"github.com/universe-30/Logrus"
 	"github.com/universe-30/ULog"
-	"github.com/universe-30/logrus"
 )
 
 func main() {
 	//default is info level
-	log_logrus, err := logrus.New("./logs", 2, 20, 30)
+	log_logrus, err := Logrus.New("./logs", 2, 20, 30)
 	if err != nil {
 		panic(err.Error())
 	}
