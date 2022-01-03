@@ -10,7 +10,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"
-	"github.com/universe-30/Logrus/nested"
+	"github.com/universe-30/LogrusULog/nested"
 	"github.com/universe-30/ULog"
 )
 
@@ -94,7 +94,7 @@ func (logger *LocalLog) SetLevel(loglevel LogLevel) {
 }
 
 // Default is info level
-func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAgeDays int) (*LocalLog, error) {
+func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAgeDays int) (ULog.Logger, error) {
 
 	logger := logrus.New()
 
@@ -139,8 +139,7 @@ func (logger *LocalLog) getLogFilesList(log_folder string) ([]string, error) {
 func (logger *LocalLog) GetLastN(lineCount int, levels []LogLevel) ([]string, error) {
 	var alllogfiles []string
 	var err error
-	var folder string
-	folder = logger.ALL_LogfolderABS
+	folder := logger.ALL_LogfolderABS
 	alllogfiles, err = logger.getLogFilesList(folder)
 	if err != nil {
 		return nil, err
@@ -212,13 +211,13 @@ func (logger *LocalLog) PrintLastN(lineCount int, levels []LogLevel) {
 	lines, err := logger.GetLastN(lineCount, levels)
 	if err != nil {
 		color.Red(err.Error())
-		color.White("================== end ==================")
+		color.White("=================== end ===================")
 		return
 	}
 
 	if err != nil {
 		color.Red(err.Error())
-		color.White("================== end ==================")
+		color.White("=================== end ===================")
 		return
 	}
 
@@ -254,20 +253,12 @@ func (logger *LocalLog) PrintLastN(lineCount int, levels []LogLevel) {
 		}
 
 		if Counter >= lineCount {
-			color.White("================== end ==================")
+			color.White("=================== end ===================")
 			return
 		}
 
 	}
-	color.White("================== end ==================")
-}
-
-func (logger *LocalLog) PrintLastN_ErrLogs(lastN int) {
-	logger.PrintLastN(lastN, []ULog.LogLevel{ULog.ErrorLevel, ULog.PanicLevel, ULog.FatalLevel})
-}
-
-func (logger *LocalLog) PrintLastN_AllLogs(lastN int) {
-	logger.PrintLastN(lastN, []ULog.LogLevel{ULog.ErrorLevel, ULog.PanicLevel, ULog.FatalLevel, ULog.TraceLevel, ULog.DebugLevel, ULog.InfoLevel, ULog.WarnLevel})
+	color.White("=================== end ===================")
 }
 
 func splitLines(s string) []string {
