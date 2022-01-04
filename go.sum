@@ -15,8 +15,8 @@ github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE
 github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
 github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
-github.com/universe-30/ULog v0.1.13 h1:+fj7JS2NO3+skGXkJVtRb5keFfjljIKHQtabyW7Ahc8=
-github.com/universe-30/ULog v0.1.13/go.mod h1:crCwYCpgVO3bGi0wEx0CKsb9RwsQ2zmnLh1Yov3VKyM=
+github.com/universe-30/ULog v0.1.14 h1:Kh6S/jwIabzn4kCBEnBjaN/VTmHriFwndmkG5swNAPw=
+github.com/universe-30/ULog v0.1.14/go.mod h1:crCwYCpgVO3bGi0wEx0CKsb9RwsQ2zmnLh1Yov3VKyM=
 golang.org/x/sys v0.0.0-20191026070338-33540a1f6037/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200116001909-b77594299b42/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

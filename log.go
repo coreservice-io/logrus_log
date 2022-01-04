@@ -1,4 +1,4 @@
-package Logrus
+package LogrusULog
 
 import (
 	"bufio"
