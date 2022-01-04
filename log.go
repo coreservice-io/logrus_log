@@ -29,10 +29,29 @@ type LocalLog struct {
 	MaxAge           int
 }
 
+func (logger *LocalLog) GetLevel() ULog.LogLevel {
+	switch logger.Logger.Level {
+	case logrus.PanicLevel:
+		return ULog.PanicLevel
+	case logrus.FatalLevel:
+		return ULog.FatalLevel
+	case logrus.ErrorLevel:
+		return ULog.ErrorLevel
+	case logrus.WarnLevel:
+		return ULog.WarnLevel
+	case logrus.InfoLevel:
+		return ULog.InfoLevel
+	case logrus.DebugLevel:
+		return ULog.DebugLevel
+	case logrus.TraceLevel:
+		return ULog.TraceLevel
+	default:
+		return ULog.InfoLevel
+	}
+}
+
 func (logger *LocalLog) SetLevel(loglevel LogLevel) {
-
 	var LLevel logrus.Level
-
 	switch loglevel {
 	case ULog.PanicLevel:
 		LLevel = logrus.PanicLevel
