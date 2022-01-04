@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/fatih/color v1.13.0
 	github.com/sirupsen/logrus v1.8.1
-	github.com/universe-30/ULog v0.1.14
+	github.com/universe-30/ULog v0.1.15
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
 
