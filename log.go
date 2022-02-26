@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/coreservice-io/LogrusULog/nested"
+	"github.com/coreservice-io/ULog"
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"
-	"github.com/universe-30/LogrusULog/nested"
-	"github.com/universe-30/ULog"
 )
 
 var logsAllAbsFolder string

@@ -13,8 +13,8 @@ go get "github.com/universe-30/logrusULog"
 package main
  
 import (
-	LogrusULog "github.com/universe-30/LogrusULog"
-	"github.com/universe-30/ULog"
+	"github.com/coreservice-io/LogrusULog"
+	"github.com/coreservice-io/ULog"
 )
 
 func main() {
