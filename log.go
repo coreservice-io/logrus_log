@@ -155,7 +155,7 @@ func (logger *LocalLog) getLogFilesList(log_folder string) ([]string, error) {
 	return result, nil
 }
 
-func (logger *LocalLog) GetLastN(lineCount int, levels []LogLevel) ([]string, error) {
+func (logger *LocalLog) GetLastN(lineCount int64, levels []LogLevel) ([]string, error) {
 	var alllogfiles []string
 	var err error
 	folder := logger.ALL_LogfolderABS
@@ -167,7 +167,7 @@ func (logger *LocalLog) GetLastN(lineCount int, levels []LogLevel) ([]string, er
 		return nil, errors.New("no logfile")
 	}
 
-	Counter := 0
+	var Counter int64 = 0
 	levelMap := map[LogLevel]struct{}{}
 	for i := range levels {
 		levelMap[levels[i]] = struct{}{}
@@ -224,7 +224,7 @@ func (logger *LocalLog) GetLastN(lineCount int, levels []LogLevel) ([]string, er
 	return resultLog, nil
 }
 
-func (logger *LocalLog) PrintLastN(lineCount int, levels []LogLevel) {
+func (logger *LocalLog) PrintLastN(lineCount int64, levels []LogLevel) {
 	color.White("================== start ==================")
 
 	lines, err := logger.GetLastN(lineCount, levels)
@@ -240,7 +240,7 @@ func (logger *LocalLog) PrintLastN(lineCount int, levels []LogLevel) {
 		return
 	}
 
-	Counter := 0
+	var Counter int64 = 0
 	levelMap := map[LogLevel]struct{}{}
 	for i := range levels {
 		levelMap[levels[i]] = struct{}{}

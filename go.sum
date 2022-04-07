@@ -1,7 +1,7 @@
 github.com/BurntSushi/toml v0.4.1 h1:GaI7EiDXDRfa8VshkTj7Fym7ha+y8/XxIgD2okUIjLw=
 github.com/BurntSushi/toml v0.4.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
-github.com/coreservice-io/ULog v0.1.16 h1:igrNoT0xGeL32hgKPahoTCm9ifhRu32uH9VX+2fvw/k=
-github.com/coreservice-io/ULog v0.1.16/go.mod h1:AUDPBWJxVLwVXzge/aAV4p9AFcpzn1YyWU+u5b8s9Pg=
+github.com/coreservice-io/ULog v0.1.17 h1:Nrfho1wNksxsHK3g2eS5NgaifgjfmxcywEJVa2OkyfE=
+github.com/coreservice-io/ULog v0.1.17/go.mod h1:AUDPBWJxVLwVXzge/aAV4p9AFcpzn1YyWU+u5b8s9Pg=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fatih/color v1.13.0 h1:8LOYc1KYPPmyKMuN8QV2DNRWNbLo6LZ0iLs8+mlH53w=
