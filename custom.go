@@ -1,4 +1,4 @@
-package LogrusULog
+package logrus_log
 
 import (
 	"io"

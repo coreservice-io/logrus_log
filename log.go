@@ -1,4 +1,4 @@
-package LogrusULog
+package logrus_log
 
 import (
 	"bufio"
@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/coreservice-io/LogrusULog/nested"
-	"github.com/coreservice-io/ULog"
+	"github.com/coreservice-io/log"
+	"github.com/coreservice-io/logrus_log/nested"
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"
 )
@@ -18,7 +18,7 @@ var logsAllAbsFolder string
 var logsErrorAbsFolder string
 
 type Fields = logrus.Fields
-type LogLevel = ULog.LogLevel
+type LogLevel = log.LogLevel
 
 type LocalLog struct {
 	*logrus.Logger
@@ -29,43 +29,43 @@ type LocalLog struct {
 	MaxAge           int
 }
 
-func (logger *LocalLog) GetLevel() ULog.LogLevel {
+func (logger *LocalLog) GetLevel() log.LogLevel {
 	switch logger.Logger.Level {
 	case logrus.PanicLevel:
-		return ULog.PanicLevel
+		return log.PanicLevel
 	case logrus.FatalLevel:
-		return ULog.FatalLevel
+		return log.FatalLevel
 	case logrus.ErrorLevel:
-		return ULog.ErrorLevel
+		return log.ErrorLevel
 	case logrus.WarnLevel:
-		return ULog.WarnLevel
+		return log.WarnLevel
 	case logrus.InfoLevel:
-		return ULog.InfoLevel
+		return log.InfoLevel
 	case logrus.DebugLevel:
-		return ULog.DebugLevel
+		return log.DebugLevel
 	case logrus.TraceLevel:
-		return ULog.TraceLevel
+		return log.TraceLevel
 	default:
-		return ULog.InfoLevel
+		return log.InfoLevel
 	}
 }
 
 func (logger *LocalLog) SetLevel(loglevel LogLevel) {
 	var LLevel logrus.Level
 	switch loglevel {
-	case ULog.PanicLevel:
+	case log.PanicLevel:
 		LLevel = logrus.PanicLevel
-	case ULog.FatalLevel:
+	case log.FatalLevel:
 		LLevel = logrus.FatalLevel
-	case ULog.ErrorLevel:
+	case log.ErrorLevel:
 		LLevel = logrus.ErrorLevel
-	case ULog.WarnLevel:
+	case log.WarnLevel:
 		LLevel = logrus.WarnLevel
-	case ULog.InfoLevel:
+	case log.InfoLevel:
 		LLevel = logrus.InfoLevel
-	case ULog.DebugLevel:
+	case log.DebugLevel:
 		LLevel = logrus.DebugLevel
-	case ULog.TraceLevel:
+	case log.TraceLevel:
 		LLevel = logrus.TraceLevel
 	default:
 		LLevel = logrus.InfoLevel
@@ -113,7 +113,7 @@ func (logger *LocalLog) SetLevel(loglevel LogLevel) {
 }
 
 // Default is info level
-func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAgeDays int) (ULog.Logger, error) {
+func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAgeDays int) (log.Logger, error) {
 
 	logger := logrus.New()
 
@@ -132,7 +132,7 @@ func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAg
 	//default info level//
 	LocalLogPointer := &LocalLog{logger, logsAllAbsFolder, logsErrorAbsFolder,
 		fileMaxSizeMBytes, MaxBackupsFiles, MaxAgeDays}
-	LocalLogPointer.SetLevel(ULog.InfoLevel)
+	LocalLogPointer.SetLevel(log.InfoLevel)
 	return LocalLogPointer, nil
 }
 
@@ -191,25 +191,25 @@ func (logger *LocalLog) GetLastN(lineCount int64, levels []LogLevel) ([]string, 
 				continue
 			}
 
-			if strings.Contains(lines[i], string(ULog.DebugTagStr)) && isContain(levelMap, ULog.DebugLevel) {
+			if strings.Contains(lines[i], string(log.DebugTagStr)) && isContain(levelMap, log.DebugLevel) {
 				resultLog = append(resultLog, lines[i])
 				Counter++
-			} else if strings.Contains(lines[i], string(ULog.TraceTagStr)) && isContain(levelMap, ULog.TraceLevel) {
+			} else if strings.Contains(lines[i], string(log.TraceTagStr)) && isContain(levelMap, log.TraceLevel) {
 				resultLog = append(resultLog, lines[i])
 				Counter++
-			} else if strings.Contains(lines[i], string(ULog.InfoTagStr)) && isContain(levelMap, ULog.InfoLevel) {
+			} else if strings.Contains(lines[i], string(log.InfoTagStr)) && isContain(levelMap, log.InfoLevel) {
 				resultLog = append(resultLog, lines[i])
 				Counter++
-			} else if strings.Contains(lines[i], string(ULog.WarnTagStr)) && isContain(levelMap, ULog.WarnLevel) {
+			} else if strings.Contains(lines[i], string(log.WarnTagStr)) && isContain(levelMap, log.WarnLevel) {
 				resultLog = append(resultLog, lines[i])
 				Counter++
-			} else if strings.Contains(lines[i], string(ULog.FatalTagStr)) && isContain(levelMap, ULog.FatalLevel) {
+			} else if strings.Contains(lines[i], string(log.FatalTagStr)) && isContain(levelMap, log.FatalLevel) {
 				resultLog = append(resultLog, lines[i])
 				Counter++
-			} else if strings.Contains(lines[i], string(ULog.ErrorTagStr)) && isContain(levelMap, ULog.ErrorLevel) {
+			} else if strings.Contains(lines[i], string(log.ErrorTagStr)) && isContain(levelMap, log.ErrorLevel) {
 				resultLog = append(resultLog, lines[i])
 				Counter++
-			} else if strings.Contains(lines[i], string(ULog.PanicTagStr)) && isContain(levelMap, ULog.PanicLevel) {
+			} else if strings.Contains(lines[i], string(log.PanicTagStr)) && isContain(levelMap, log.PanicLevel) {
 				resultLog = append(resultLog, lines[i])
 				Counter++
 			}
@@ -248,25 +248,25 @@ func (logger *LocalLog) PrintLastN(lineCount int64, levels []LogLevel) {
 
 	for i := 0; i < len(lines); i++ {
 
-		if strings.Contains(lines[i], string(ULog.DebugTagStr)) && isContain(levelMap, ULog.DebugLevel) {
+		if strings.Contains(lines[i], string(log.DebugTagStr)) && isContain(levelMap, log.DebugLevel) {
 			color.White(lines[i])
 			Counter++
-		} else if strings.Contains(lines[i], string(ULog.TraceTagStr)) && isContain(levelMap, ULog.TraceLevel) {
+		} else if strings.Contains(lines[i], string(log.TraceTagStr)) && isContain(levelMap, log.TraceLevel) {
 			color.Cyan(lines[i])
 			Counter++
-		} else if strings.Contains(lines[i], string(ULog.InfoTagStr)) && isContain(levelMap, ULog.InfoLevel) {
+		} else if strings.Contains(lines[i], string(log.InfoTagStr)) && isContain(levelMap, log.InfoLevel) {
 			color.Green(lines[i])
 			Counter++
-		} else if strings.Contains(lines[i], string(ULog.WarnTagStr)) && isContain(levelMap, ULog.WarnLevel) {
+		} else if strings.Contains(lines[i], string(log.WarnTagStr)) && isContain(levelMap, log.WarnLevel) {
 			color.Yellow(lines[i])
 			Counter++
-		} else if strings.Contains(lines[i], string(ULog.FatalTagStr)) && isContain(levelMap, ULog.FatalLevel) {
+		} else if strings.Contains(lines[i], string(log.FatalTagStr)) && isContain(levelMap, log.FatalLevel) {
 			color.Red(lines[i])
 			Counter++
-		} else if strings.Contains(lines[i], string(ULog.ErrorTagStr)) && isContain(levelMap, ULog.ErrorLevel) {
+		} else if strings.Contains(lines[i], string(log.ErrorTagStr)) && isContain(levelMap, log.ErrorLevel) {
 			color.Red(lines[i])
 			Counter++
-		} else if strings.Contains(lines[i], string(ULog.PanicTagStr)) && isContain(levelMap, ULog.PanicLevel) {
+		} else if strings.Contains(lines[i], string(log.PanicTagStr)) && isContain(levelMap, log.PanicLevel) {
 			color.Red(lines[i])
 			Counter++
 		}
@@ -289,7 +289,7 @@ func splitLines(s string) []string {
 	return lines
 }
 
-func isContain(m map[ULog.LogLevel]struct{}, l ULog.LogLevel) bool {
+func isContain(m map[log.LogLevel]struct{}, l log.LogLevel) bool {
 	_, ok := m[l]
 	return ok
 }

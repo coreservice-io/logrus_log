@@ -1,9 +1,9 @@
-module github.com/coreservice-io/LogrusULog
+module github.com/coreservice-io/logrus_log
 
 go 1.17
 
 require (
-	github.com/coreservice-io/ULog v0.1.17
+	github.com/coreservice-io/log v0.1.18
 	github.com/fatih/color v1.13.0
 	github.com/sirupsen/logrus v1.8.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
