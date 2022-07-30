@@ -7,6 +7,7 @@ import (
 
 func main() {
 	//default is info level
+	//return the log interface implemented instance
 	llog, err := logrus_log.New("./logs", 1, 20, 30)
 	if err != nil {
 		panic(err.Error())
