@@ -22,6 +22,7 @@ type LogLevel = log.LogLevel
 
 type LocalLog struct {
 	*logrus.Logger
+	extended         bool
 	ALL_LogfolderABS string
 	ERR_LogfolderABS string
 	MaxSize          int
@@ -51,6 +52,13 @@ func (logger *LocalLog) GetLevel() log.LogLevel {
 }
 
 func (logger *LocalLog) SetLevel(loglevel LogLevel) {
+	logger.Logger.SetLevel(logrus.Level(loglevel))
+	if logger.extended {
+		logger.setOutputHook(loglevel)
+	}
+}
+
+func (logger *LocalLog) setOutputHook(loglevel LogLevel) {
 	var LLevel logrus.Level
 	switch loglevel {
 	case log.PanicLevel:
@@ -106,14 +114,26 @@ func (logger *LocalLog) SetLevel(loglevel LogLevel) {
 	}})
 
 	/////set hooks
-	logger.Logger.SetLevel(logrus.Level(loglevel))
 	logger.ReplaceHooks(make(logrus.LevelHooks))
 	logger.AddHook(rotateFileHook_ALL)
 	logger.AddHook(rotateFileHook_ERR)
 }
 
+func New() (log.Logger, error) {
+
+	logger := logrus.New()
+
+	//default info level//
+	LocalLogPointer := &LocalLog{
+		Logger:   logger,
+		extended: false,
+	}
+	LocalLogPointer.SetLevel(log.InfoLevel)
+	return LocalLogPointer, nil
+}
+
 // Default is info level
-func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAgeDays int) (log.Logger, error) {
+func NewWithFile(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAgeDays int) (log.Logger, error) {
 
 	logger := logrus.New()
 
@@ -130,7 +150,7 @@ func New(logsAbsFolder string, fileMaxSizeMBytes int, MaxBackupsFiles int, MaxAg
 	}
 
 	//default info level//
-	LocalLogPointer := &LocalLog{logger, logsAllAbsFolder, logsErrorAbsFolder,
+	LocalLogPointer := &LocalLog{logger, true, logsAllAbsFolder, logsErrorAbsFolder,
 		fileMaxSizeMBytes, MaxBackupsFiles, MaxAgeDays}
 	LocalLogPointer.SetLevel(log.InfoLevel)
 	return LocalLogPointer, nil
