@@ -22,7 +22,11 @@ import (
 func main() {
 	//default is info level
 	//return the log interface implemented instance
-	llog, err := logrus_log.New("./logs", 1, 20, 30)
+
+	// if need to log to file
+	llog, err := logrus_log.NewWithFile("./logs", 1, 20, 30)
+	// if do not want to log to file, only log to console
+	//  llog, err := logrus_log.New()
 	if err != nil {
 		panic(err.Error())
 	}
